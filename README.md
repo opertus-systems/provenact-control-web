@@ -5,7 +5,7 @@ Next.js frontend scaffold for the Inactu control plane.
 ## Local development
 
 ```bash
-cd apps/inactu-control/web
+cd web
 npm install
 npm run dev
 ```
@@ -40,7 +40,7 @@ INACTU_API_AUTH_SECRET=replace-with-the-same-shared-secret-as-api
 
 ## Deploy on Vercel
 
-- Import this directory as the Vercel project root: `apps/inactu-control/web`
+- Import this directory as the Vercel project root: `web`
 - Framework preset: Next.js
 - Build command: `npm run build`
 - Output directory: `.next`

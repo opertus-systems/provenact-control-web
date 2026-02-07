@@ -25,8 +25,8 @@ export default function SecurityPage() {
             <p>Trust boundary definition</p>
             <p>Execution substrate scope is explicit; avoid orchestration or model-runtime ambiguity.</p>
             <p>
-              <a href="https://github.com/opertus-systems/inactu/blob/main/README.md" target="_blank" rel="noreferrer">
-                inactu/README.md
+              <a href="https://github.com/opertus-systems/inactu-cli/blob/main/README.md" target="_blank" rel="noreferrer">
+                inactu-cli/README.md
               </a>
             </p>
           </div>
@@ -52,8 +52,8 @@ export default function SecurityPage() {
             <p>Cryptographic verification</p>
             <p>Manifest and receipt verification paths are deterministic and testable.</p>
             <p>
-              <a href="https://github.com/opertus-systems/inactu/blob/main/docs/getting-started.md" target="_blank" rel="noreferrer">
-                docs/getting-started.md
+              <a href="https://github.com/opertus-systems/inactu-cli/blob/main/docs/getting-started.md" target="_blank" rel="noreferrer">
+                inactu-cli/docs/getting-started.md
               </a>
             </p>
           </div>
@@ -62,11 +62,11 @@ export default function SecurityPage() {
             <p>Schema and behavior changes follow explicit compatibility policy.</p>
             <p>
               <a
-                href="https://github.com/opertus-systems/inactu/blob/main/spec/compatibility.md"
+                href="https://github.com/opertus-systems/inactu-spec/blob/main/docs/versioning-policy.md"
                 target="_blank"
                 rel="noreferrer"
               >
-                spec/compatibility.md
+                inactu-spec/docs/versioning-policy.md
               </a>
             </p>
           </div>
@@ -74,8 +74,8 @@ export default function SecurityPage() {
             <p>Threat-model alignment</p>
             <p>Assumptions and non-goals are documented before production adoption.</p>
             <p>
-              <a href="https://github.com/opertus-systems/inactu/blob/main/spec/threat-model.md" target="_blank" rel="noreferrer">
-                spec/threat-model.md
+              <a href="https://github.com/opertus-systems/inactu-cli/blob/main/spec/threat-model.md" target="_blank" rel="noreferrer">
+                inactu-cli/spec/threat-model.md
               </a>
             </p>
           </div>
@@ -83,8 +83,8 @@ export default function SecurityPage() {
             <p>Conformance assurance</p>
             <p>Release gates include vector-driven conformance and verification checks.</p>
             <p>
-              <a href="https://github.com/opertus-systems/inactu/blob/main/spec/conformance.md" target="_blank" rel="noreferrer">
-                spec/conformance.md
+              <a href="https://github.com/opertus-systems/inactu-spec/blob/main/spec/conformance.md" target="_blank" rel="noreferrer">
+                inactu-spec/spec/conformance.md
               </a>
             </p>
           </div>

@@ -1,11 +1,10 @@
-# inactu-web
+# inactu-control-web
 
-Next.js frontend scaffold for the Inactu control plane.
+Standalone Next.js web console for the Inactu control plane API.
 
 ## Local development
 
 ```bash
-cd web
 npm install
 npm run dev
 ```
@@ -40,7 +39,7 @@ INACTU_API_AUTH_SECRET=replace-with-the-same-shared-secret-as-api
 
 ## Deploy on Vercel
 
-- Import this directory as the Vercel project root: `web`
+- Import this repository as the Vercel project.
 - Framework preset: Next.js
 - Build command: `npm run build`
 - Output directory: `.next`
@@ -53,7 +52,6 @@ INACTU_API_AUTH_SECRET=replace-with-the-same-shared-secret-as-api
 Use the included sync script to upsert variables from an env file:
 
 ```bash
-cd web
 vercel link
 npm run vercel:env:sync:prod
 ```

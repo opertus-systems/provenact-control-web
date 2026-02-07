@@ -1,10 +1,10 @@
 {
-  "name": "inactu-web",
+  "name": "inactu-control-web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "run:api": "cd .. && cargo run -p inactu-control",
+    "run:api": "echo 'Run API in separate repo: https://github.com/opertus-systems/inactu-control'",
     "quickstart:check": "bash ./scripts/quickstart-check.sh",
     "build": "next build",
     "start": "next start",

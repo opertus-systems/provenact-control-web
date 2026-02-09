@@ -1,6 +1,6 @@
-# inactu-control-web
+# provenact-control-web
 
-Standalone Next.js web console for the Inactu control plane API.
+Standalone Next.js web console for the Provenact control plane API.
 
 ## Local development
 
@@ -14,17 +14,17 @@ Node.js requirement: `>= 20.9.0`.
 Set the backend API base URL in `.env.local`:
 
 ```bash
-NEXT_PUBLIC_INACTU_API_BASE_URL=http://localhost:8080
+NEXT_PUBLIC_PROVENACT_API_BASE_URL=http://localhost:8080
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=replace-with-a-long-random-secret
-DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/inactu_control
-INACTU_API_BASE_URL=http://localhost:8080
-INACTU_API_AUTH_SECRET=replace-with-the-same-shared-secret-as-api
+DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/provenact_control
+PROVENACT_API_BASE_URL=http://localhost:8080
+PROVENACT_API_AUTH_SECRET=replace-with-at-least-32-random-bytes-shared-with-api
 ```
 
-Use `INACTU_API_BASE_URL` (server-side) for authenticated API bridge calls.
-`NEXT_PUBLIC_INACTU_API_BASE_URL` is only for client-facing display and docs UI.
+Use `PROVENACT_API_BASE_URL` (server-side) for authenticated API bridge calls.
+`NEXT_PUBLIC_PROVENACT_API_BASE_URL` is only for client-facing display and docs UI.
 
 ## Auth scaffold
 
@@ -47,7 +47,7 @@ Use `INACTU_API_BASE_URL` (server-side) for authenticated API bridge calls.
 - Build command: `npm run build`
 - Output directory: `.next`
 - Environment variables:
-  - `NEXT_PUBLIC_INACTU_API_BASE_URL=<your-api-url>`
+  - `NEXT_PUBLIC_PROVENACT_API_BASE_URL=<your-api-url>`
   - `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX`
 
 ### Sync env vars with Vercel CLI

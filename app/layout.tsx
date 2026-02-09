@@ -19,9 +19,9 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Inactu Platform | Open-Source Agent Infrastructure",
+  title: "Provenact Platform | Open-Source Agent Infrastructure",
   description:
-    "Inactu Platform includes Control, Core Inactu, SDK tooling, and base skills for governed, auditable agent execution."
+    "Provenact Platform includes Control, Core Provenact, SDK tooling, and base skills for governed, auditable agent execution."
 };
 
 export default function RootLayout({

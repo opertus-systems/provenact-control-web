@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { FormEvent, useEffect, useState } from "react";
 
-const apiBase = process.env.NEXT_PUBLIC_INACTU_API_BASE_URL ?? "http://localhost:8080";
+const apiBase = process.env.NEXT_PUBLIC_PROVENACT_API_BASE_URL ?? "http://localhost:8080";
 const proxyBase = "/api/openapi/proxy";
 const openApiSpecUrl = "/openapi.yaml";
 const SwaggerUI = dynamic(() => import("swagger-ui-react"), {
@@ -13,7 +13,7 @@ const SwaggerUI = dynamic(() => import("swagger-ui-react"), {
 
 const defaults = {
   hash: `{
-  "payload": "hello inactu"
+  "payload": "hello provenact"
 }`,
   manifest: `{
   "manifest": {
@@ -29,7 +29,7 @@ const defaults = {
     "trusted_signers": ["alice.dev", "opertus.systems"],
     "capability_ceiling": {
       "fs": {
-        "read": ["/data", "/opt/inactu/public"],
+        "read": ["/data", "/opt/provenact/public"],
         "write": ["/tmp"]
       },
       "net": ["https://api.open-meteo.com", "https://api.github.com"],
@@ -173,7 +173,7 @@ export default function DocsPage() {
     <main className="page shell-stack">
       <section className="hero">
         <p className="chip">Docs</p>
-        <h1>Inactu Control Plane Docs</h1>
+        <h1>Provenact Control Plane Docs</h1>
         <p className="lede">
           API contract: <code>openapi.yaml</code>. This interface is designed for deterministic verification and
           auditable outcomes, with explicit request and response schemas for each endpoint.
@@ -184,18 +184,18 @@ export default function DocsPage() {
         <div className="cta-row">
           <a
             className="btn btn-secondary"
-            href="https://github.com/opertus-systems/inactu-control-web"
+            href="https://github.com/opertus-systems/provenact-control-web"
             target="_blank"
             rel="noreferrer"
           >
             Web Repo
           </a>
-          <a className="btn btn-secondary" href="https://github.com/opertus-systems/inactu-control" target="_blank" rel="noreferrer">
+          <a className="btn btn-secondary" href="https://github.com/opertus-systems/provenact-control" target="_blank" rel="noreferrer">
             API Repo
           </a>
           <a
             className="btn btn-secondary"
-            href="https://github.com/opertus-systems/inactu-control/blob/main/openapi.yaml"
+            href="https://github.com/opertus-systems/provenact-control/blob/main/openapi.yaml"
             target="_blank"
             rel="noreferrer"
           >
@@ -203,7 +203,7 @@ export default function DocsPage() {
           </a>
           <a
             className="btn btn-secondary"
-            href="https://github.com/opertus-systems/inactu-control/tree/main/examples"
+            href="https://github.com/opertus-systems/provenact-control/tree/main/examples"
             target="_blank"
             rel="noreferrer"
           >
@@ -219,7 +219,7 @@ export default function DocsPage() {
             type="button"
             className="btn btn-secondary"
             onClick={async () => {
-              await navigator.clipboard.writeText("https://github.com/opertus-systems/inactu-control.git");
+              await navigator.clipboard.writeText("https://github.com/opertus-systems/provenact-control.git");
               setCloneCopied(true);
               setTimeout(() => setCloneCopied(false), 1500);
             }}
@@ -233,17 +233,17 @@ export default function DocsPage() {
           exits non-zero on the first failure.
         </p>
         <pre className="code-block">{`# Step 0: clone and install
-git clone https://github.com/opertus-systems/inactu-control-web.git
-cd inactu-control-web
+git clone https://github.com/opertus-systems/provenact-control-web.git
+cd provenact-control-web
 npm install
 
 # Terminal 1: start API
-git clone https://github.com/opertus-systems/inactu-control.git ../inactu-control
-cd ../inactu-control
-cargo run -p inactu-control --features web --bin inactu-control-web
+git clone https://github.com/opertus-systems/provenact-control.git ../provenact-control
+cd ../provenact-control
+cargo run -p provenact-control --features web --bin provenact-control-web
 
 # Terminal 2: run baseline checks
-cd ../inactu-control-web
+cd ../provenact-control-web
 API_BASE="${apiBase}" npm run quickstart:check`}</pre>
         <div className="grid two-up">
           <article>
@@ -254,7 +254,7 @@ API_BASE="${apiBase}" npm run quickstart:check`}</pre>
             <h3>2. Hash a payload</h3>
             <pre className="code-block">{`curl -s -X POST "$API_BASE/v1/hash/sha256" \\
   -H "content-type: application/json" \\
-  -d '{"payload":"hello inactu"}'`}</pre>
+  -d '{"payload":"hello provenact"}'`}</pre>
           </article>
           <article>
             <h3>3. Verify a manifest</h3>

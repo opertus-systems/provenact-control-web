@@ -25,16 +25,16 @@ export type FaqItem = {
 };
 
 export const company = {
-  name: "Inactu Control",
+  name: "Provenact Control",
   supportEmail: "opensource@opertus.systems",
   salesEmail: "opensource@opertus.systems"
 };
 
 export const homeHero: HeroContent = {
-  chip: "Open-Source Inactu Control (Experimental)",
+  chip: "Open-Source Provenact Control (Experimental)",
   title: "Verifiable execution substrate + control-plane API for immutable skills.",
   description:
-    "Inactu is an execution substrate, not an agent framework. Use Inactu Control for verification-oriented APIs while core Inactu provides signing, policy checks, deterministic runtime contracts, and auditable receipts."
+    "Provenact is an execution substrate, not an agent framework. Use Provenact Control for verification-oriented APIs while core Provenact provides signing, policy checks, deterministic runtime contracts, and auditable receipts."
 };
 
 export const homeFeatures: FeatureItem[] = [
@@ -58,12 +58,12 @@ export const homeFeatures: FeatureItem[] = [
 export const productSuite: FeatureItem[] = [
   {
     icon: "shield",
-    title: "Inactu Control",
+    title: "Provenact Control",
     body: "Experimental control-plane scaffold with package/context APIs and verification endpoints."
   },
   {
     icon: "workflow",
-    title: "Inactu Verifier + Runtime",
+    title: "Provenact Verifier + Runtime",
     body: "Core verification libraries and runtime rules for deterministic, policy-constrained execution."
   },
   {

@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     submittedAt: new Date().toISOString()
   };
 
-  const webhookUrl = process.env.INACTU_CONTACT_WEBHOOK_URL;
+  const webhookUrl = process.env.PROVENACT_CONTACT_WEBHOOK_URL;
 
   if (webhookUrl) {
     try {

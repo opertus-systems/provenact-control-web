@@ -33,7 +33,7 @@ export default function PrivacyPage() {
         <h2>Retention and Requests</h2>
         <p>
           We retain customer data according to contractual terms and statutory requirements. Data access and deletion
-          requests may be sent to support@inactu.example.
+          requests may be sent to support@provenact.example.
         </p>
       </section>
     </main>

@@ -1,8 +1,8 @@
 # SECURITY.md
 
-## Security Policy — inactu-control-web
+## Security Policy — provenact-control-web
 
-`inactu-control-web` is the web console for Inactu control-plane APIs.
+`provenact-control-web` is the web console for Provenact control-plane APIs.
 
 ### Scope
 

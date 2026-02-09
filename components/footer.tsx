@@ -5,9 +5,9 @@ export function Footer() {
     <footer className="site-footer">
       <div className="shell footer-grid">
         <div>
-          <p className="footer-title">Inactu Control</p>
+          <p className="footer-title">Provenact Control</p>
           <p className="footer-copy">
-            Experimental control-plane scaffold for core Inactu verification and execution workflows.
+            Experimental control-plane scaffold for core Provenact verification and execution workflows.
           </p>
         </div>
         <div className="footer-links">
@@ -16,14 +16,14 @@ export function Footer() {
           <Link href="/about">About</Link>
           <Link href="/security">Security</Link>
           <Link href="/contact">Contact</Link>
-          <a href="https://github.com/opertus-systems/inactu-control-web" target="_blank" rel="noreferrer">
+          <a href="https://github.com/opertus-systems/provenact-control-web" target="_blank" rel="noreferrer">
             Web Repo
           </a>
-          <a href="https://github.com/opertus-systems/inactu-control" target="_blank" rel="noreferrer">
+          <a href="https://github.com/opertus-systems/provenact-control" target="_blank" rel="noreferrer">
             API Repo
           </a>
           <a
-            href="https://github.com/opertus-systems/inactu-control/blob/main/openapi.yaml"
+            href="https://github.com/opertus-systems/provenact-control/blob/main/openapi.yaml"
             target="_blank"
             rel="noreferrer"
           >

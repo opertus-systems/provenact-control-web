@@ -1,6 +1,7 @@
 import { compare } from "bcryptjs";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { isLoginRateLimited } from "./auth-rate-limit";
 import { getDbPool } from "./db";
 
 type AuthUserRow = {
@@ -23,11 +24,14 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         const email = credentials?.email?.trim().toLowerCase();
         const password = credentials?.password;
 
         if (!email || !password) {
+          return null;
+        }
+        if (await isLoginRateLimited(req?.headers, email)) {
           return null;
         }
 

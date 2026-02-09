@@ -7,10 +7,10 @@ const nav = [
   { href: "/about", label: "About" },
   { href: "/security", label: "Security" },
   { href: "/docs", label: "Docs" },
-  { href: "https://github.com/opertus-systems/inactu-control-web", label: "Web Repo", external: true },
-  { href: "https://github.com/opertus-systems/inactu-control", label: "API Repo", external: true },
+  { href: "https://github.com/opertus-systems/provenact-control-web", label: "Web Repo", external: true },
+  { href: "https://github.com/opertus-systems/provenact-control", label: "API Repo", external: true },
   {
-    href: "https://github.com/opertus-systems/inactu-control/blob/main/openapi.yaml",
+    href: "https://github.com/opertus-systems/provenact-control/blob/main/openapi.yaml",
     label: "API Spec",
     external: true
   }
@@ -22,7 +22,7 @@ export function Header() {
       <div className="shell">
         <div className="header-row">
           <Link href="/" className="brand">
-            Inactu Control
+            Provenact Control
           </Link>
           <nav className="nav" aria-label="Main navigation">
             {nav.map((item) => (
@@ -43,7 +43,7 @@ export function Header() {
             </Link>
             <a
               className="btn btn-primary"
-              href="https://github.com/opertus-systems/inactu-control-web"
+              href="https://github.com/opertus-systems/provenact-control-web"
               target="_blank"
               rel="noreferrer"
             >

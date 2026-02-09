@@ -8,7 +8,7 @@ export default function AboutPage() {
           chip: "About",
           title: "Built for verifiable execution with explicit trust boundaries.",
           description:
-            "Inactu Control is an experimental scaffold around core Inactu verification and runtime primitives, designed for teams that prioritize evidence over claims."
+            "Provenact Control is an experimental scaffold around core Provenact verification and runtime primitives, designed for teams that prioritize evidence over claims."
         }}
       />
 

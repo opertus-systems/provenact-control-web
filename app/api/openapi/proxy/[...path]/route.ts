@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 function getApiBaseUrl() {
-  const value = process.env.INACTU_API_BASE_URL;
+  const value = process.env.PROVENACT_API_BASE_URL;
   if (!value) {
     return null;
   }
@@ -29,7 +29,7 @@ function normalizePath(path: string[]): string | null {
     return null;
   }
   const segments = joined.split("/");
-  const allowedRoots = new Set(["hash", "verify", "packages", "contexts"]);
+  const allowedRoots = new Set(["hash", "verify"]);
   if (!allowedRoots.has(segments[1] ?? "")) {
     return null;
   }
@@ -38,7 +38,7 @@ function normalizePath(path: string[]): string | null {
 
 function buildUpstreamHeaders(request: NextRequest): Headers {
   const upstreamHeaders = new Headers();
-  const allowlist = ["accept", "authorization", "content-type"];
+  const allowlist = ["accept", "content-type"];
   for (const header of allowlist) {
     const value = request.headers.get(header);
     if (value) {
@@ -52,7 +52,7 @@ async function proxyRequest(request: NextRequest, method: string, path: string[]
   const apiBase = getApiBaseUrl();
   if (!apiBase) {
     return NextResponse.json(
-      { error: "API base URL not configured", details: "Set INACTU_API_BASE_URL or NEXT_PUBLIC_INACTU_API_BASE_URL." },
+      { error: "API base URL not configured", details: "Set PROVENACT_API_BASE_URL or NEXT_PUBLIC_PROVENACT_API_BASE_URL." },
       { status: 500 }
     );
   }
@@ -104,31 +104,6 @@ export async function GET(request: NextRequest, context: Context) {
 export async function POST(request: NextRequest, context: Context) {
   const { path } = await context.params;
   return proxyRequest(request, "POST", path);
-}
-
-export async function PUT(request: NextRequest, context: Context) {
-  const { path } = await context.params;
-  return proxyRequest(request, "PUT", path);
-}
-
-export async function PATCH(request: NextRequest, context: Context) {
-  const { path } = await context.params;
-  return proxyRequest(request, "PATCH", path);
-}
-
-export async function DELETE(request: NextRequest, context: Context) {
-  const { path } = await context.params;
-  return proxyRequest(request, "DELETE", path);
-}
-
-export async function HEAD(request: NextRequest, context: Context) {
-  const { path } = await context.params;
-  return proxyRequest(request, "HEAD", path);
-}
-
-export async function OPTIONS(request: NextRequest, context: Context) {
-  const { path } = await context.params;
-  return proxyRequest(request, "OPTIONS", path);
 }
 
 export const dynamic = "force-dynamic";

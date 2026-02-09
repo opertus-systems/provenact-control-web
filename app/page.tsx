@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main className="page shell-stack">
       <section className="hero">
-        <p className="chip">Inactu</p>
+        <p className="chip">Provenact</p>
         <h1>Stop Guessing What Your Agents Really Did.</h1>
         <p className="lede">
           Verifiable, policy-bounded execution with auditable receipts for secure autonomous actions.
@@ -16,7 +16,7 @@ export default function Home() {
             Try the Quickstart
           </Link>
         </div>
-        <p className="small">Inactu makes agent actions provable without replacing your existing agent stack.</p>
+        <p className="small">Provenact makes agent actions provable without replacing your existing agent stack.</p>
       </section>
 
       <section className="sticky-cta">
@@ -28,13 +28,13 @@ export default function Home() {
 
       <section className="card">
         <p className="chip">The Agent Problem</p>
-        <h2>Where Inactu sits</h2>
+        <h2>Where Provenact sits</h2>
         <div className="agent-problem-grid">
           <pre className="code-block agent-diagram">{`[Agent]
    |
    | proposes action
    v
-[Inactu]
+[Provenact]
   - verify skill
   - enforce policy
   - constrain execution
@@ -102,7 +102,7 @@ export default function Home() {
       </section>
 
       <section className="card trust-signals">
-        <p className="chip">What Inactu Is Not</p>
+        <p className="chip">What Provenact Is Not</p>
         <h2>A narrow trust boundary beats a wide promise.</h2>
         <ul className="signal-list">
           <li>Not an agent framework.</li>

@@ -2,6 +2,9 @@
   "name": "provenact-control-web",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev",
     "quickstart:check": "bash ./scripts/quickstart-check.sh",

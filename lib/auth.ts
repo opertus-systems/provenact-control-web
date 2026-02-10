@@ -10,6 +10,8 @@ type AuthUserRow = {
   password_hash: string;
 };
 
+const DUMMY_PASSWORD_HASH = "$2b$12$Lp7XrGD2QROfOK6jGPOF0e7hs21BYuSMDFoJ.nGMwKS0hQUQvyl2q";
+
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt"
@@ -41,6 +43,7 @@ export const authOptions: NextAuthOptions = {
         );
         const user = result.rows[0];
         if (!user) {
+          await compare(password, DUMMY_PASSWORD_HASH);
           return null;
         }
 

@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     await client.query("ROLLBACK");
     if ((error as { code?: string }).code === "23505") {
-      return NextResponse.json({ error: "Email already exists." }, { status: 409 });
+      return NextResponse.json({ ok: true }, { status: 201 });
     }
     throw error;
   } finally {

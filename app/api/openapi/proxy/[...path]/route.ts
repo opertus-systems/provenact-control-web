@@ -1,20 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildClientResponseHeaders } from "../../../../../lib/openapi-proxy";
+import { normalizeProvenactApiBaseUrl } from "../../../../../lib/provenact-api-base-url";
 
 const MAX_PROXY_BODY_BYTES = 1_000_000;
 
 function getApiBaseUrl() {
-  const value = process.env.PROVENACT_API_BASE_URL;
-  if (!value) {
-    return null;
-  }
-  const normalized = value.replace(/\/+$/, "");
-  const parsed = new URL(normalized);
-  const isLocalHttp = parsed.protocol === "http:" && (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1");
-  if (!isLocalHttp && parsed.protocol !== "https:") {
-    return null;
-  }
-  return normalized;
+  return normalizeProvenactApiBaseUrl(process.env.PROVENACT_API_BASE_URL);
 }
 
 function normalizePath(path: string[]): string | null {

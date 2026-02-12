@@ -30,31 +30,49 @@ function extractHeader(headers: unknown, name: string): string | null {
   return null;
 }
 
-function requestIp(headers: unknown): string {
+function normalizeEmail(email?: string): string | null {
+  if (typeof email !== "string") {
+    return null;
+  }
+  const normalized = email.trim().toLowerCase();
+  return normalized.length > 0 ? normalized : null;
+}
+
+function requestIp(headers: unknown): string | null {
   const trustForwarded = process.env.TRUST_PROXY_HEADERS === "true";
   if (!trustForwarded) {
-    return "unknown";
+    return null;
   }
 
   const forwarded = extractHeader(headers, "x-forwarded-for");
   if (forwarded) {
-    return forwarded.split(",")[0]!.trim();
+    const first = forwarded.split(",")[0]?.trim();
+    if (first) {
+      return first;
+    }
   }
 
-  return (
+  const direct = (
     extractHeader(headers, "x-real-ip") ??
     extractHeader(headers, "cf-connecting-ip") ??
-    "unknown"
+    null
   );
+  return direct?.trim() || null;
 }
 
-function attemptKey(headers: unknown, email?: string): string {
+export function buildRateLimitKey(headers: unknown, email?: string): string {
   const ip = requestIp(headers);
-  if (ip !== "unknown") {
-    return `${ip}:${email ?? "unknown"}`;
+  const normalizedEmail = normalizeEmail(email);
+  if (ip && normalizedEmail) {
+    return `ip:${ip}|email:${normalizedEmail}`;
   }
-  const ua = extractHeader(headers, "user-agent")?.slice(0, 200) ?? "unknown-ua";
-  return `${ip}:${ua}:${email ?? "unknown"}`;
+  if (ip) {
+    return `ip:${ip}`;
+  }
+  if (normalizedEmail) {
+    return `email:${normalizedEmail}`;
+  }
+  return "global";
 }
 
 async function isRateLimited(
@@ -63,7 +81,7 @@ async function isRateLimited(
   headers: unknown,
   email?: string
 ): Promise<boolean> {
-  const key = attemptKey(headers, email);
+  const key = buildRateLimitKey(headers, email);
   const client = await getDbPool().connect();
 
   try {

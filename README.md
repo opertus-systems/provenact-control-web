@@ -77,6 +77,6 @@ The Rust control-plane API should run separately (for example on Fly.io, Render,
 
 - Web-to-API bridge tokens are short-lived (`5m`) and include `jti`.
 - OpenAPI proxy route is allowlisted to verification endpoints only.
-- Signup endpoint applies per-origin/IP+email attempt throttling.
+- Signup endpoint applies deterministic attempt throttling keyed by trusted IP and/or normalized email.
 - Security headers are set in `next.config.mjs` (including CSP and HSTS baselines).
 - Security reporting/process is documented in `SECURITY.md`.

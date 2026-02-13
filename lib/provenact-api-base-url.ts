@@ -2,11 +2,10 @@ export function normalizeProvenactApiBaseUrl(raw: string | undefined): string | 
   if (!raw) {
     return null;
   }
-  const normalized = raw.replace(/\/+$/, "");
 
   let parsed: URL;
   try {
-    parsed = new URL(normalized);
+    parsed = new URL(raw.trim());
   } catch {
     return null;
   }
@@ -17,7 +16,14 @@ export function normalizeProvenactApiBaseUrl(raw: string | undefined): string | 
   if (!isLocalHttp && parsed.protocol !== "https:") {
     return null;
   }
-  return normalized;
+  if (parsed.username || parsed.password) {
+    return null;
+  }
+  const normalizedPathname = parsed.pathname.replace(/\/+/g, "/");
+  if (normalizedPathname !== "/" || parsed.search || parsed.hash) {
+    return null;
+  }
+  return parsed.origin;
 }
 
 export function requireProvenactApiBaseUrl(raw: string | undefined): string {

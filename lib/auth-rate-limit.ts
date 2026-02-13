@@ -1,8 +1,13 @@
+import { createHash } from "node:crypto";
+import { isIP } from "node:net";
 import { getDbPool } from "./db";
 
 const RATE_LIMIT_WINDOW_SECONDS = 60;
 const REGISTER_RATE_LIMIT_MAX_ATTEMPTS = 8;
 const LOGIN_RATE_LIMIT_MAX_ATTEMPTS = 10;
+const MAX_IP_HEADER_VALUE_CHARS = 128;
+const MAX_EMAIL_LENGTH_CHARS = 320;
+const MAX_TRUST_PROXY_HOPS = 5;
 
 type HeaderRecord = Record<string, unknown>;
 
@@ -35,7 +40,36 @@ function normalizeEmail(email?: string): string | null {
     return null;
   }
   const normalized = email.trim().toLowerCase();
-  return normalized.length > 0 ? normalized : null;
+  if (normalized.length === 0 || normalized.length > MAX_EMAIL_LENGTH_CHARS) {
+    return null;
+  }
+  return normalized;
+}
+
+function normalizeIpCandidate(value: string): string | null {
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.length > MAX_IP_HEADER_VALUE_CHARS) {
+    return null;
+  }
+
+  let candidate = trimmed;
+  if (candidate.startsWith("[")) {
+    const closingBracket = candidate.indexOf("]");
+    if (closingBracket <= 1) {
+      return null;
+    }
+    candidate = candidate.slice(1, closingBracket);
+  } else if (candidate.includes(".") && candidate.split(":").length === 2) {
+    // Accept common IPv4:port formatting in proxy headers.
+    candidate = candidate.slice(0, candidate.lastIndexOf(":"));
+  }
+
+  const zoneIdentifierIndex = candidate.indexOf("%");
+  if (zoneIdentifierIndex > 0) {
+    candidate = candidate.slice(0, zoneIdentifierIndex);
+  }
+
+  return isIP(candidate) > 0 ? candidate : null;
 }
 
 function requestIp(headers: unknown): string | null {
@@ -43,21 +77,46 @@ function requestIp(headers: unknown): string | null {
   if (!trustForwarded) {
     return null;
   }
+  const proxyHops = trustedProxyHops();
 
   const forwarded = extractHeader(headers, "x-forwarded-for");
   if (forwarded) {
-    const first = forwarded.split(",")[0]?.trim();
-    if (first) {
-      return first;
+    const chain = forwarded
+      .split(",")
+      .map((value) => normalizeIpCandidate(value))
+      .filter((value): value is string => value !== null);
+    if (chain.length >= proxyHops) {
+      return chain[chain.length - proxyHops] ?? null;
     }
   }
 
-  const direct = (
-    extractHeader(headers, "x-real-ip") ??
-    extractHeader(headers, "cf-connecting-ip") ??
-    null
-  );
-  return direct?.trim() || null;
+  const directCandidates = [
+    extractHeader(headers, "x-real-ip"),
+    extractHeader(headers, "cf-connecting-ip")
+  ];
+  for (const candidate of directCandidates) {
+    if (!candidate) {
+      continue;
+    }
+    const normalized = normalizeIpCandidate(candidate);
+    if (normalized) {
+      return normalized;
+    }
+  }
+
+  return null;
+}
+
+function trustedProxyHops(): number {
+  const raw = Number(process.env.TRUST_PROXY_HOPS ?? "1");
+  if (!Number.isFinite(raw) || raw < 1) {
+    return 1;
+  }
+  return Math.min(Math.floor(raw), MAX_TRUST_PROXY_HOPS);
+}
+
+function hashRateLimitKey(material: string): string {
+  return `sha256:${createHash("sha256").update(material).digest("hex")}`;
 }
 
 export function buildRateLimitKey(headers: unknown, email?: string): string {
@@ -81,7 +140,7 @@ async function isRateLimited(
   headers: unknown,
   email?: string
 ): Promise<boolean> {
-  const key = buildRateLimitKey(headers, email);
+  const key = hashRateLimitKey(buildRateLimitKey(headers, email));
   const client = await getDbPool().connect();
 
   try {

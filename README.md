@@ -21,10 +21,14 @@ NEXTAUTH_SECRET=replace-with-a-long-random-secret
 DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/provenact_control
 PROVENACT_API_BASE_URL=http://localhost:8080
 PROVENACT_API_AUTH_SECRET=replace-with-at-least-32-random-bytes-shared-with-api
+TRUST_PROXY_HEADERS=false
+TRUST_PROXY_HOPS=1
 ```
 
 Use `PROVENACT_API_BASE_URL` (server-side) for authenticated API bridge calls.
 `NEXT_PUBLIC_PROVENACT_API_BASE_URL` is only for client-facing display and docs UI.
+Set `TRUST_PROXY_HEADERS=true` only when the app is behind trusted reverse proxies.
+`TRUST_PROXY_HOPS` defaults to `1` and controls which `x-forwarded-for` hop is used.
 
 ## Auth scaffold
 

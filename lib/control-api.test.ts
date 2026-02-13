@@ -71,4 +71,30 @@ describe("controlApiFetch", () => {
     expect(payload).toEqual({ error: "Control API request failed." });
     expect(fetchSpy).not.toHaveBeenCalled();
   });
+
+  it("rejects traversal and encoding tricks in control API targets", async () => {
+    const blockedPaths = [
+      "/v1//packages",
+      "/v1/../packages",
+      "/v1/%2e%2e/packages",
+      "/v1/packages?debug=true",
+      "/v1/packages#frag",
+      "/v1\\packages"
+    ];
+
+    for (const blockedPath of blockedPaths) {
+      createControlApiTokenMock.mockResolvedValueOnce("token-abc");
+      requireProvenactApiBaseUrlMock.mockReturnValueOnce("https://api.example.test");
+      const fetchSpy = vi.fn();
+      vi.stubGlobal("fetch", fetchSpy);
+
+      const response = await controlApiFetch(blockedPath, "user-123", { method: "GET" });
+      const payload = await response.json();
+
+      expect(response.status).toBe(502);
+      expect(payload).toEqual({ error: "Control API request failed." });
+      expect(fetchSpy).not.toHaveBeenCalled();
+      vi.unstubAllGlobals();
+    }
+  });
 });

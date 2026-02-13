@@ -13,6 +13,16 @@ function normalizeControlApiPath(path: string): string {
   if (!path.startsWith("/") || path.startsWith("//") || path.includes("://")) {
     throw new Error("Control API path must be an absolute in-origin path.");
   }
+  if (path.includes("\\") || path.includes("%") || path.includes("?") || path.includes("#")) {
+    throw new Error("Control API path contains disallowed characters.");
+  }
+  const segments = path.split("/");
+  if (segments.some((segment, index) => index > 0 && segment.length === 0)) {
+    throw new Error("Control API path must not contain empty segments.");
+  }
+  if (segments.some((segment) => segment === "." || segment === "..")) {
+    throw new Error("Control API path must not contain traversal segments.");
+  }
   return path;
 }
 

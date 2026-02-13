@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { buildClientResponseHeaders } from "../../../../../lib/openapi-proxy";
+import {
+  buildClientResponseHeaders,
+  normalizeOpenApiProxyPath
+} from "../../../../../lib/openapi-proxy";
 import { normalizeProvenactApiBaseUrl } from "../../../../../lib/provenact-api-base-url";
 
 const MAX_PROXY_BODY_BYTES = 1_000_000;
@@ -7,28 +10,6 @@ const UPSTREAM_TIMEOUT_MS = 10_000;
 
 function getApiBaseUrl() {
   return normalizeProvenactApiBaseUrl(process.env.PROVENACT_API_BASE_URL);
-}
-
-function normalizePath(path: string[]): string | null {
-  if (!path.length) {
-    return null;
-  }
-  const joined = path.join("/");
-  if (joined.includes("..")) {
-    return null;
-  }
-  if (joined === "healthz") {
-    return joined;
-  }
-  if (!joined.startsWith("v1/")) {
-    return null;
-  }
-  const segments = joined.split("/");
-  const allowedRoots = new Set(["hash", "verify"]);
-  if (!allowedRoots.has(segments[1] ?? "")) {
-    return null;
-  }
-  return joined;
 }
 
 function buildUpstreamHeaders(request: NextRequest): Headers {
@@ -82,7 +63,7 @@ async function proxyRequest(request: NextRequest, method: string, path: string[]
     );
   }
 
-  const normalizedPath = normalizePath(path);
+  const normalizedPath = normalizeOpenApiProxyPath(path);
   if (!normalizedPath) {
     return NextResponse.json({ error: "Path is not allowed for this proxy route." }, { status: 404 });
   }

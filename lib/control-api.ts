@@ -9,6 +9,13 @@ function controlApiBaseUrl(): string {
   return requireProvenactApiBaseUrl(process.env.PROVENACT_API_BASE_URL);
 }
 
+function normalizeControlApiPath(path: string): string {
+  if (!path.startsWith("/") || path.startsWith("//") || path.includes("://")) {
+    throw new Error("Control API path must be an absolute in-origin path.");
+  }
+  return path;
+}
+
 function controlApiTimeoutMs(): number {
   const raw = Number(process.env.PROVENACT_API_TIMEOUT_MS);
   if (!Number.isFinite(raw) || raw <= 0) {
@@ -31,13 +38,14 @@ export async function controlApiFetch(path: string, userId: string, init?: Reque
   }
 
   try {
+    const normalizedPath = normalizeControlApiPath(path);
     const headers = new Headers(init?.headers);
     headers.set("authorization", `Bearer ${token}`);
     if (!headers.has("content-type") && init?.body) {
       headers.set("content-type", "application/json");
     }
 
-    return await fetch(`${baseUrl}${path}`, {
+    return await fetch(`${baseUrl}${normalizedPath}`, {
       ...init,
       headers,
       cache: "no-store",

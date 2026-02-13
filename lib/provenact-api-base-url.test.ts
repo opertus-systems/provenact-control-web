@@ -16,6 +16,13 @@ describe("normalizeProvenactApiBaseUrl", () => {
     expect(normalizeProvenactApiBaseUrl("not-a-url")).toBeNull();
     expect(normalizeProvenactApiBaseUrl("http://api.example.test")).toBeNull();
   });
+
+  it("rejects urls with credentials or extra components", () => {
+    expect(normalizeProvenactApiBaseUrl("https://user:pass@api.example.test")).toBeNull();
+    expect(normalizeProvenactApiBaseUrl("https://api.example.test/base")).toBeNull();
+    expect(normalizeProvenactApiBaseUrl("https://api.example.test?x=1")).toBeNull();
+    expect(normalizeProvenactApiBaseUrl("https://api.example.test#frag")).toBeNull();
+  });
 });
 
 describe("requireProvenactApiBaseUrl", () => {

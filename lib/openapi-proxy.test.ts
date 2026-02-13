@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildClientResponseHeaders } from "./openapi-proxy";
+import { buildClientResponseHeaders, normalizeOpenApiProxyPath } from "./openapi-proxy";
 
 describe("buildClientResponseHeaders", () => {
   it("keeps only allowlisted response headers", () => {
@@ -30,3 +30,19 @@ describe("buildClientResponseHeaders", () => {
   });
 });
 
+describe("normalizeOpenApiProxyPath", () => {
+  it("allows only explicit safe control API paths", () => {
+    expect(normalizeOpenApiProxyPath(["healthz"])).toBe("healthz");
+    expect(normalizeOpenApiProxyPath(["v1", "hash", "sha256"])).toBe("v1/hash/sha256");
+    expect(normalizeOpenApiProxyPath(["v1", "verify", "manifest"])).toBe("v1/verify/manifest");
+    expect(normalizeOpenApiProxyPath(["v1", "verify", "receipt"])).toBe("v1/verify/receipt");
+  });
+
+  it("rejects traversal and non-allowlisted paths", () => {
+    expect(normalizeOpenApiProxyPath([])).toBeNull();
+    expect(normalizeOpenApiProxyPath(["v1", "verify", "admin"])).toBeNull();
+    expect(normalizeOpenApiProxyPath(["v1", "verify", ".."])).toBeNull();
+    expect(normalizeOpenApiProxyPath(["v1", "verify", "%2e%2e"])).toBeNull();
+    expect(normalizeOpenApiProxyPath(["v1\\verify\\manifest"])).toBeNull();
+  });
+});

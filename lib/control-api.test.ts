@@ -55,4 +55,20 @@ describe("controlApiFetch", () => {
     expect(payload).toEqual({ error: "Control API request failed." });
     expect(JSON.stringify(payload)).not.toContain("10.0.0.25");
   });
+
+  it("rejects non-path control API targets", async () => {
+    createControlApiTokenMock.mockResolvedValueOnce("token-abc");
+    requireProvenactApiBaseUrlMock.mockReturnValueOnce("https://api.example.test");
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+
+    const response = await controlApiFetch("https://evil.example.test/v1/packages", "user-123", {
+      method: "GET"
+    });
+    const payload = await response.json();
+
+    expect(response.status).toBe(502);
+    expect(payload).toEqual({ error: "Control API request failed." });
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
 });

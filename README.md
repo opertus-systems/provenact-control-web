@@ -87,3 +87,9 @@ The Rust control-plane API should run separately (for example on Fly.io, Render,
 - Signup endpoint applies deterministic attempt throttling keyed by trusted IP and/or normalized email.
 - Security headers are set in `proxy.ts` via request middleware (including CSP baseline).
 - Security reporting/process is documented in `SECURITY.md`.
+
+## OpenAPI mirror source pin
+
+- `public/openapi.yaml` mirrors
+  `opertus-systems/provenact-control@d5120e0df67a8fc20e2e71ed9661f6b389e5cbe0`.
+- Source pin and checksum are recorded in `sync-manifest.json`.

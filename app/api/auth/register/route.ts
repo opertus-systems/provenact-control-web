@@ -2,8 +2,10 @@ import { hash } from "bcryptjs";
 import { type NextRequest, NextResponse } from "next/server";
 import { isRegisterRateLimited } from "../../../../lib/auth-rate-limit";
 import { getDbPool } from "../../../../lib/db";
+import { JsonBodyError, parseJsonBodyWithLimit } from "../../../../lib/json-body";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_REGISTER_BODY_BYTES = 8 * 1024;
 
 function isSameOrigin(request: NextRequest): boolean {
   const origin = request.headers.get("origin");
@@ -18,7 +20,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Origin not allowed." }, { status: 403 });
   }
 
-  const body = await request.json().catch(() => null);
+  let body: { email?: string; password?: string } | null;
+  try {
+    body = (await parseJsonBodyWithLimit(request, MAX_REGISTER_BODY_BYTES)) as {
+      email?: string;
+      password?: string;
+    };
+  } catch (error) {
+    if (error instanceof JsonBodyError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+    throw error;
+  }
+
   const email = body?.email?.trim().toLowerCase();
   const password = body?.password;
 

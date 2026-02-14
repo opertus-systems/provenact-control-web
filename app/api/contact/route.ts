@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { JsonBodyError, parseJsonBodyWithLimit } from "../../../lib/json-body";
 
 type ContactPayload = {
   name: string;
@@ -6,6 +7,7 @@ type ContactPayload = {
   company?: string;
   message: string;
 };
+const MAX_CONTACT_BODY_BYTES = 32 * 1024;
 
 function isSameOrigin(request: NextRequest): boolean {
   const origin = request.headers.get("origin");
@@ -45,11 +47,13 @@ export async function POST(request: NextRequest) {
   }
 
   let body: Partial<ContactPayload>;
-
   try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON payload." }, { status: 400 });
+    body = (await parseJsonBodyWithLimit(request, MAX_CONTACT_BODY_BYTES)) as Partial<ContactPayload>;
+  } catch (error) {
+    if (error instanceof JsonBodyError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+    throw error;
   }
 
   const error = validate(body);

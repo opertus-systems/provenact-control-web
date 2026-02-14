@@ -26,6 +26,19 @@ describe("parseJsonBodyWithLimit", () => {
     } satisfies Partial<JsonBodyError>);
   });
 
+  it("rejects invalid utf-8 payloads", async () => {
+    const request = new Request("https://example.test/api/demo", {
+      method: "POST",
+      body: new Uint8Array([0x7b, 0x22, 0x6b, 0x22, 0x3a, 0xff, 0x7d]),
+      headers: { "content-type": "application/json" }
+    });
+
+    await expect(parseJsonBodyWithLimit(request, 1024)).rejects.toMatchObject({
+      status: 400,
+      message: "Invalid JSON payload."
+    } satisfies Partial<JsonBodyError>);
+  });
+
   it("rejects oversized content-length before reading the body", async () => {
     const request = new Request("https://example.test/api/demo", {
       method: "POST",

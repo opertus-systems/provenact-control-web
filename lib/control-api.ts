@@ -6,7 +6,9 @@ const CONTROL_API_CONFIG_ERROR = "Control API bridge is misconfigured.";
 const CONTROL_API_UPSTREAM_ERROR = "Control API request failed.";
 
 function controlApiBaseUrl(): string {
-  return requireProvenactApiBaseUrl(process.env.PROVENACT_API_BASE_URL);
+  return requireProvenactApiBaseUrl(process.env.PROVENACT_API_BASE_URL, {
+    allowPrivateHttp: process.env.PROVENACT_ALLOW_PRIVATE_HTTP === "true"
+  });
 }
 
 function normalizeControlApiPath(path: string): string {

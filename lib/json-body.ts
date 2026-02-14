@@ -20,7 +20,7 @@ function parseContentLength(value: string | null): number | null {
 }
 
 function decodeUtf8(bytes: Uint8Array): string {
-  return new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+  return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 }
 
 export async function parseJsonBodyWithLimit(
@@ -69,7 +69,8 @@ export async function parseJsonBodyWithLimit(
   }
 
   try {
-    return JSON.parse(decodeUtf8(body));
+    const decoded = decodeUtf8(body);
+    return JSON.parse(decoded);
   } catch {
     throw new JsonBodyError(400, "Invalid JSON payload.");
   }

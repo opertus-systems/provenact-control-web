@@ -9,7 +9,9 @@ const MAX_PROXY_BODY_BYTES = 1_000_000;
 const UPSTREAM_TIMEOUT_MS = 10_000;
 
 function getApiBaseUrl() {
-  return normalizeProvenactApiBaseUrl(process.env.PROVENACT_API_BASE_URL);
+  return normalizeProvenactApiBaseUrl(process.env.PROVENACT_API_BASE_URL, {
+    allowPrivateHttp: process.env.PROVENACT_ALLOW_PRIVATE_HTTP === "true"
+  });
 }
 
 function buildUpstreamHeaders(request: NextRequest): Headers {

@@ -17,6 +17,17 @@ describe("normalizeProvenactApiBaseUrl", () => {
     expect(normalizeProvenactApiBaseUrl("http://api.example.test")).toBeNull();
   });
 
+  it("allows private-network http hosts only when explicitly enabled", () => {
+    expect(normalizeProvenactApiBaseUrl("http://provenact-control:8080")).toBeNull();
+    expect(
+      normalizeProvenactApiBaseUrl("http://provenact-control:8080", { allowPrivateHttp: true })
+    ).toBe("http://provenact-control:8080");
+    expect(normalizeProvenactApiBaseUrl("http://10.1.2.3:8080", { allowPrivateHttp: true })).toBe(
+      "http://10.1.2.3:8080"
+    );
+    expect(normalizeProvenactApiBaseUrl("http://api.example.test:8080", { allowPrivateHttp: true })).toBeNull();
+  });
+
   it("rejects urls with credentials or extra components", () => {
     expect(normalizeProvenactApiBaseUrl("https://user:pass@api.example.test")).toBeNull();
     expect(normalizeProvenactApiBaseUrl("https://api.example.test/base")).toBeNull();

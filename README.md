@@ -20,6 +20,7 @@ NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=replace-with-a-long-random-secret
 DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/provenact_control
 PROVENACT_API_BASE_URL=http://localhost:8080
+PROVENACT_ALLOW_PRIVATE_HTTP=false
 PROVENACT_API_AUTH_SECRET=replace-with-at-least-32-random-bytes-shared-with-api
 TRUST_PROXY_HEADERS=false
 TRUST_PROXY_HOPS=1
@@ -27,6 +28,8 @@ TRUST_PROXY_HOPS=1
 
 Use `PROVENACT_API_BASE_URL` (server-side) for authenticated API bridge calls.
 `NEXT_PUBLIC_PROVENACT_API_BASE_URL` is only for client-facing display and docs UI.
+Set `PROVENACT_ALLOW_PRIVATE_HTTP=true` only for trusted private-network hosts
+(for example, `http://provenact-control:8080` in docker-compose).
 Set `TRUST_PROXY_HEADERS=true` only when the app is behind trusted reverse proxies.
 `TRUST_PROXY_HOPS` defaults to `1` and controls which `x-forwarded-for` hop is used.
 
@@ -82,5 +85,5 @@ The Rust control-plane API should run separately (for example on Fly.io, Render,
 - Web-to-API bridge tokens are short-lived (`5m`) and include `jti`.
 - OpenAPI proxy route is allowlisted to verification endpoints only.
 - Signup endpoint applies deterministic attempt throttling keyed by trusted IP and/or normalized email.
-- Security headers are set in `next.config.mjs` (including CSP and HSTS baselines).
+- Security headers are set in `proxy.ts` via request middleware (including CSP baseline).
 - Security reporting/process is documented in `SECURITY.md`.

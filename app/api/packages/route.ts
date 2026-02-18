@@ -2,6 +2,9 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../../lib/auth";
 import { controlApiFetch } from "../../../lib/control-api";
+import { JsonBodyError, parseJsonBodyWithLimit } from "../../../lib/json-body";
+
+const MAX_PACKAGES_POST_BODY_BYTES = 64 * 1024;
 
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -20,8 +23,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json().catch(() => null);
-  if (!body) {
+  let body: unknown;
+  try {
+    body = await parseJsonBodyWithLimit(request, MAX_PACKAGES_POST_BODY_BYTES);
+  } catch (error) {
+    if (error instanceof JsonBodyError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+    throw error;
+  }
+
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 

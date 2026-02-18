@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "mode": "openapi",
+  "source_repo": {
+    "name": "opertus-systems/provenact-control",
+    "url": "https://github.com/opertus-systems/provenact-control",
+    "commit": "d5120e0df67a8fc20e2e71ed9661f6b389e5cbe0"
+  },
+  "artifacts": [
+    {
+      "name": "openapi.yaml",
+      "source_path": "openapi.yaml",
+      "target_path": "public/openapi.yaml",
+      "target_sha256": "48c0cb9eb962f71890e363e6dfdb5e486fe7d9119088c31e4d6c3c2815d6120e"
+    }
+  ]
+}

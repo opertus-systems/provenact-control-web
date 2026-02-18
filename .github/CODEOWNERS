@@ -11,3 +11,7 @@
 **/update*/** @opertus-systems/core
 **/*provenance*/** @opertus-systems/core
 # END PROVENACT-SENSITIVE-OWNERS
+
+# Synced mirror from provenact-control.
+/public/openapi.yaml @opertus-systems/core
+/sync-manifest.json @opertus-systems/core

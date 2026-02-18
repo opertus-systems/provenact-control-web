@@ -8,8 +8,70 @@ permissions:
   contents: read
 
 jobs:
+  sync-openapi-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout provenact-control-web
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Read source commit from sync manifest
+        id: sync_manifest
+        shell: bash
+        run: |
+          source_commit="$(python3 - <<'PY'
+          import json
+          with open("sync-manifest.json", "r", encoding="utf-8") as f:
+              data = json.load(f)
+          print(data["source_repo"]["commit"])
+          PY
+          )"
+          echo "source_commit=$source_commit" >> "$GITHUB_OUTPUT"
+
+      - name: Require source SHA reference in docs
+        shell: bash
+        run: |
+          grep -F "${{ steps.sync_manifest.outputs.source_commit }}" README.md
+
+      - name: Checkout provenact-control at pinned source commit
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          repository: opertus-systems/provenact-control
+          ref: ${{ steps.sync_manifest.outputs.source_commit }}
+          path: provenact-control
+
+      - name: Run OpenAPI parity check
+        shell: bash
+        run: |
+          chmod +x ./scripts/check-sync-parity.sh
+          ./scripts/check-sync-parity.sh ./sync-manifest.json "$GITHUB_WORKSPACE/provenact-control"
+
+  typed-client-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup Node
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Regenerate typed client (if configured) and assert no diff
+        shell: bash
+        run: |
+          if [ -d "lib/generated/client" ] && node -e 'const p=require("./package.json"); process.exit(p.scripts && p.scripts["generate:client"] ? 0 : 1)'; then
+            npm ci
+            npm run generate:client
+            git diff --exit-code
+          else
+            echo "no generated typed client configured; skipping"
+          fi
+
   web:
     runs-on: ubuntu-latest
+    needs:
+      - sync-openapi-check
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd

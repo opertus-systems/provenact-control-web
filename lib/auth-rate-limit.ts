@@ -121,7 +121,7 @@ function hashRateLimitKey(material: string): string {
   return `sha256:${createHash("sha256").update(material).digest("hex")}`;
 }
 
-export function buildRateLimitKey(headers: unknown, email?: string): string {
+export function buildRateLimitKey(headers: unknown, email?: string): string | null {
   const ip = requestIp(headers);
   const normalizedEmail = normalizeEmail(email);
   if (ip && normalizedEmail) {
@@ -133,7 +133,7 @@ export function buildRateLimitKey(headers: unknown, email?: string): string {
   if (normalizedEmail) {
     return `email:${normalizedEmail}`;
   }
-  return "global";
+  return null;
 }
 
 async function isRateLimited(
@@ -142,7 +142,11 @@ async function isRateLimited(
   headers: unknown,
   email?: string
 ): Promise<boolean> {
-  const key = hashRateLimitKey(buildRateLimitKey(headers, email));
+  const keyMaterial = buildRateLimitKey(headers, email);
+  if (!keyMaterial) {
+    return false;
+  }
+  const key = hashRateLimitKey(keyMaterial);
   const client = await getDbPool().connect();
 
   try {

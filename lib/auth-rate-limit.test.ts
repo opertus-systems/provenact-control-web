@@ -78,10 +78,17 @@ describe("buildRateLimitKey", () => {
     expect(key).toBe("ip:198.51.100.7|email:alice@example.com");
   });
 
-  it("falls back to a stable global bucket when no trusted ip and no email exist", () => {
+  it("returns no key when no trusted ip and no email exist", () => {
     process.env.TRUST_PROXY_HEADERS = "false";
     const key = buildRateLimitKey({ "user-agent": "UA-A" });
 
-    expect(key).toBe("global");
+    expect(key).toBeNull();
+  });
+
+  it("returns no key when email normalization rejects the input", () => {
+    process.env.TRUST_PROXY_HEADERS = "false";
+    const key = buildRateLimitKey({ "user-agent": "UA-A" }, " ");
+
+    expect(key).toBeNull();
   });
 });
